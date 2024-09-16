@@ -1,5 +1,8 @@
-### Requisição para a raiz da aplicação.
-GET http://localhost:5195/frase
+### Requisição para a raiz da aplicação
+GET http://localhost:5195
 
-### Requisição para a segunda funcionalidade.
-GET http://localhost:5195/explorando
+### Listar produtos
+GET http://localhost:5195/api/produto/listar
+
+###
+POST http://localhost:5195/api/produto/cadastrar/mouse
