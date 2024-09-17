@@ -5,6 +5,7 @@
 // - Insomnia
 
 using API.Classes;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -25,30 +26,74 @@ List<Produto> produtos = new List<Produto>
 
 //Endpoints - Funcionalidades
 //Requisição - URL e método/verbo HHTP
+//Resposta - Dados (json/xml) e 
 
 //GET: /
 app.MapGet("/", () => "API de Produtos");
 
 //GET: /api/produto/listar
-app.MapGet("/api/produto/listar", () => 
+app.MapGet("/api/produto/listar", () =>
 {
-     return produtos;
+     if(produtos.Count > 0)
+     {
+          return Results.Ok(produtos);
+     }
+     return Results.NotFound();
 });
 
-//POST: /api/produto/cadastrar/nome_param
-app.MapPost("/api/produto/cadastrar/{nome}", (string nome) =>
+//POST: /api/produto/cadastrar/
+app.MapPost("/api/produto/cadastrar", ([FromBody] Produto produto) =>
 {
-     Produto produto = new Produto();
-     produto.Nome = nome;
      produtos.Add(produto);
-     return produtos;
+     return Results.Created("", produto);
+});
+
+//POST: /api/produto/remover
+app.MapDelete("/api/produto/remover", ([FromBody] Produto produto) =>
+{
+    var produtoParaRemover = produtos.FirstOrDefault(p => p.Nome == produto.Nome);
+    if (produtoParaRemover != null)
+    {
+        produtos.Remove(produtoParaRemover);
+        return Results.NoContent();
+    }
+    return Results.NotFound();
+});
+
+// PUT: /api/produto/alterar/{nome}
+app.MapPut("/api/produto/alterar/{nome}", ([FromRoute] string nome, [FromBody] Produto produtoAtualizado) =>
+{
+    var produto = produtos.FirstOrDefault(p => p.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase));
+    if (produto == null)
+    {
+        return Results.NotFound();
+    }
+
+    produto.Valor = produtoAtualizado.Valor;
+    produto.Quantidade = produtoAtualizado.Quantidade;
+    produto.CriadoEm = produtoAtualizado.CriadoEm;
+
+    return Results.Ok(produto);
+});
+
+//POST: /api/produto/buscar/{nome}
+app.MapGet("/api/produto/buscar/{nome}", (string nome) =>
+{
+    var produto = produtos.FirstOrDefault(p => p.Nome == nome);
+    if (produto != null)
+    {
+        return Results.Ok(produto);
+    }
+    return Results.NotFound();
 });
 
 app.Run();
 
-//Exercicios para a próxima aula
-// - Criar um endpoint para receber informação pela URL.
-// - Criar um endpoint para receber informação pelo Corpo.
+//Exercícios para aula de hoje 
+// - Buscar um produto pelo nome
+// - Remover um produto
+// - Alterar um produto
+
 
 //Java
 //Produto produto = new Produto();
@@ -66,4 +111,5 @@ app.Run();
 //Retrieve -   Select  -  Get
 //Update   -   Update  -  Put/Patch
 //Delete   -   Delete  -  Delete
+
 

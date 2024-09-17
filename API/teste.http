@@ -5,4 +5,44 @@ GET http://localhost:5195
 GET http://localhost:5195/api/produto/listar
 
 ###
-POST http://localhost:5195/api/produto/cadastrar/mouse
+POST http://localhost:5195/api/produto/cadastrar
+Content-Type: application/json
+
+{
+     "nome" : "Água", 
+     "valor" : 4.5,
+     "quantidade" : 200
+}
+
+###
+POST http://localhost:5195/api/produto/cadastrar
+Content-Type: application/json
+
+{
+     "nome" : "Monster", 
+     "valor" : 10.9,
+     "quantidade" : 500
+}
+
+###
+DELETE http://localhost:5195/api/produto/remover
+Content-Type: application/json
+
+{
+     "nome" : "Água",
+     "valor" : 4.5,
+     "quantidade" : 200
+}
+
+###
+GET http://localhost:5195/api/produto/buscar/Monster
+
+###
+PUT http://localhost:5195/api/produto/alterar/Água
+Content-Type: application/json
+
+{
+   "nome" : "Água",
+    "valor" : 27.33,
+    "quantidade" : 120
+} 
